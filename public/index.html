@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="css/form.css">
 <script src="js/carousel.js" defer></script>
 <script src="js/audience-toggle.js" type="module" defer></script>
+<script src="js/form-submit.js" type="module"></script>
 </head>
 <body>
 <div id="top" data-site="" class="site">
@@ -460,12 +461,13 @@
           </div>
           <input type="hidden" name="audience" value="Delegate">
         </div>
+        <label class="register-field"><span class="register-label-3">Organisation</span><input type="text" name="organisation" class="register-input"></label>
         <label class="register-field"><span class="register-label-3">Category</span><select name="category" class="register-select" required></select></label>
         <div class="register-grid"><label class="register-field"><span class="register-label-3">Prefix</span><select name="prefix" class="register-select"><option value="Mr.">Mr.</option><option value="Ms.">Ms.</option><option value="Mrs.">Mrs.</option><option value="Other">Other</option></select></label><label class="register-field"><span class="register-label-3">Full name</span><input type="text" name="full_name" class="register-input"></label></div>
         <div class="register-grid"><label class="register-field"><span class="register-label-3">Designation</span><input type="text" name="designation" class="register-input"></label><label class="register-field"><span class="register-label-3">Mobile number</span><input type="tel" name="mobile" class="register-input"></label></div>
         <label class="register-field"><span class="register-label-3">Email address</span><input type="email" name="email" class="register-input"></label>
         <div hidden="" data-sponsor-fields="">
-        <div class="register-grid"><label class="register-field"><span class="register-label-3">Organisation</span><input type="text" name="organisation" class="register-input"></label><label class="register-field"><span class="register-label-3">Package of interest</span><select name="package" class="register-select"></select></label></div>
+        <label class="register-field"><span class="register-label-3">Package of interest</span><select name="package" class="register-select"></select></label>
         </div>
         <label class="register-field"><span class="register-label-3">Message</span><textarea name="message" maxlength="1000" rows="4" class="register-input"></textarea></label>
         <label class="register-label-4"><input type="checkbox" name="consent" required> I agree to be contacted about AgriXport India 2027.</label>

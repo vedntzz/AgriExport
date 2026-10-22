@@ -22,3 +22,7 @@
 [data-site] .audience-option.is-active { background: #146C5C; border-color: #9ED9C6; }
 [data-site] .audience-option:focus-visible { outline: 2px solid #9ED9C6; outline-offset: 3px; }
 [data-site] .registration-honeypot { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+[data-site] .field-error, [data-site] .form-error { display: block; color: #FFB4AB; font-size: 14px; line-height: 1.4; }
+[data-site] .form-error { margin: 0; }
+[data-site] [aria-invalid="true"] { outline: 2px solid #FFB4AB; outline-offset: 2px; }
+[data-site] .register-card:disabled { opacity: 0.65; cursor: wait; }
