@@ -24,3 +24,10 @@ it('defines the Vitest test script', () => {
 it.each(requiredVariables)('lists %s in .env.example', (variable) => {
   expect(readProjectFile('.env.example')).toMatch(new RegExp(`^${variable}=.*$`, 'm'));
 });
+
+it('redirects /register to the registration section', () => {
+  const config = JSON.parse(readProjectFile('vercel.json'));
+  expect(config.redirects).toContainEqual({
+    source: '/register', destination: '/#register', permanent: false,
+  });
+});

@@ -10,6 +10,14 @@ function pageDocument() {
   return new JSDOM(readPage()).window.document;
 }
 
+function pageWithLayoutStyles() {
+  const document = pageDocument();
+  const style = document.createElement('style');
+  style.textContent = readFileSync(new URL('../../public/css/layout.css', import.meta.url), 'utf8');
+  document.head.append(style);
+  return document;
+}
+
 function templateAttributes(document) {
   return [...document.querySelectorAll('*')].flatMap((element) =>
     element.getAttributeNames().filter((name) => name.startsWith('sc-camel')));
@@ -51,4 +59,16 @@ it('points every section link to an existing target', () => {
   const document = pageDocument();
   const targets = [...document.querySelectorAll('a[href^="#"]')];
   expect(targets.every((link) => document.getElementById(link.hash.slice(1)))).toBe(true);
+});
+
+it('has one registration anchor containing the form', () => {
+  const document = pageDocument();
+  expect(document.querySelectorAll('#register')).toHaveLength(1);
+  expect(document.querySelector('section#register form')).not.toBeNull();
+});
+
+it('offsets the registration anchor below the sticky header', () => {
+  const document = pageWithLayoutStyles();
+  const section = document.querySelector('#register');
+  expect(document.defaultView.getComputedStyle(section).scrollMarginTop).toBe('150px');
 });
