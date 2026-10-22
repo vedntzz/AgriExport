@@ -119,3 +119,8 @@ it('credits Synergy Technofin with QuantumLeap in the Convened by line', () => {
   expect(line).toBe('Synergy Technofin, with QuantumLeap');
   expect(line).not.toContain('Map My Crop');
 });
+
+it('shows the 2027 copyright year instead of 2026', () => {
+  expect(pageDocument().querySelector('footer').textContent).toContain('© 2027');
+  expect(readPage().includes('© 2026')).toBe(false);
+});
