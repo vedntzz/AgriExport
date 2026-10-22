@@ -72,3 +72,17 @@ it('offsets the registration anchor below the sticky header', () => {
   const section = document.querySelector('#register');
   expect(document.defaultView.getComputedStyle(section).scrollMarginTop).toBe('150px');
 });
+
+it('contains no January 2027 dates anywhere in the HTML', () => {
+  expect(readPage().includes('January 2027')).toBe(false);
+});
+
+it.each(['.hero-section', '#register', 'footer'])('shows the new dates in %s', (selector) => {
+  expect(pageDocument().querySelector(selector).textContent).toContain('26–27 February 2027');
+});
+
+it('shows the new dates in the dossier When block', () => {
+  const blocks = [...pageDocument().querySelectorAll('.hero-grid-3 > div')];
+  const when = blocks.find((block) => block.querySelector('.hero-content-11')?.textContent === 'When');
+  expect(when?.querySelector('.hero-content-12')?.textContent).toBe('26–27 February 2027');
+});
