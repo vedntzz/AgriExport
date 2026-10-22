@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
-import { saveRegistration } from '../../lib/db.js';
+import { saveRegistration, fetchRegistrations } from '../../lib/db.js';
 
 const { createClient, from, insert, select, single } = vi.hoisted(() => ({
   createClient: vi.fn(), from: vi.fn(), insert: vi.fn(), select: vi.fn(), single: vi.fn(),
@@ -54,4 +54,45 @@ it('returns the saved registration id for delivery logging', async () => {
   await expect(saveRegistration(record)).resolves.toEqual({ id: 'registration-123' });
   expect(select).toHaveBeenCalledWith('id');
   expect(single).toHaveBeenCalledTimes(1);
+});
+
+function configureFetchMock(rows = []) {
+  const query = { select: vi.fn().mockReturnThis(), order: vi.fn().mockReturnThis(), eq: vi.fn().mockReturnThis(), range: vi.fn() };
+  query.range.mockResolvedValue({ data: rows, error: null });
+  from.mockReturnValue(query);
+  return query;
+}
+
+it('fetches registrations newest first without an audience filter', async () => {
+  const query = configureFetchMock([record]);
+  await expect(fetchRegistrations()).resolves.toEqual([record]);
+  expect(from).toHaveBeenCalledWith('registrations');
+  expect(query.order).toHaveBeenCalledWith('created_at', { ascending: false });
+  expect(query.eq).not.toHaveBeenCalled();
+});
+
+it.each(['Delegate', 'Sponsor'])('filters fetched registrations by %s', async audience => {
+  const query = configureFetchMock([record]);
+  await fetchRegistrations(audience);
+  expect(query.eq).toHaveBeenCalledWith('audience', audience);
+});
+
+it('fetches additional pages instead of truncating large exports', async () => {
+  const page = Array.from({ length: 1000 }, () => record);
+  const query = configureFetchMock();
+  query.range.mockResolvedValueOnce({ data: page, error: null });
+  await expect(fetchRegistrations()).resolves.toEqual(page);
+  expect(query.range.mock.calls).toEqual([[0, 999], [1000, 1999]]);
+});
+
+it('throws when fetching registrations returns an error', async () => {
+  const query = configureFetchMock();
+  query.range.mockResolvedValue({ data: null, error: { message: 'Fetch failed' } });
+  await expect(fetchRegistrations()).rejects.toThrow('Fetch failed');
+});
+
+it('propagates a rejected fetch request', async () => {
+  const query = configureFetchMock();
+  query.range.mockRejectedValue(new Error('Network unavailable'));
+  await expect(fetchRegistrations()).rejects.toThrow('Network unavailable');
 });
