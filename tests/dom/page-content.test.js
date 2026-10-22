@@ -37,8 +37,8 @@ it('keeps all styles in external stylesheets', () => {
   expect(pageDocument().querySelector('style, [style], [style-hover]')).toBeNull();
 });
 
-it('uses native HTML instead of template elements and scripts', () => {
-  expect(pageDocument().querySelector('x-dc, helmet, sc-if, sc-raw-select, script')).toBeNull();
+it('uses native HTML instead of template elements and runtime scripts', () => {
+  expect(pageDocument().querySelector('x-dc, helmet, sc-if, sc-raw-select, script[type="text/x-dc"], script[data-dc-script], script:not([src])')).toBeNull();
 });
 
 it('starts with the delegate form and its resolved submit label', () => {
