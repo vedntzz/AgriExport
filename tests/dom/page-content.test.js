@@ -113,3 +113,9 @@ it('places the Map My Crop card after the Associate Partner heading', () => {
   expect(card?.querySelector('h3')?.textContent).toBe('Map My Crop');
   expect(card?.querySelector('p')?.textContent).toContain('satellite AI-driven agriculture technology company');
 });
+
+it('credits Synergy Technofin with QuantumLeap in the Convened by line', () => {
+  const line = pageDocument().querySelector('.hero-content-13 .hero-content-12').textContent;
+  expect(line).toBe('Synergy Technofin, with QuantumLeap');
+  expect(line).not.toContain('Map My Crop');
+});
