@@ -86,3 +86,9 @@ it('shows the new dates in the dossier When block', () => {
   const when = blocks.find((block) => block.querySelector('.hero-content-11')?.textContent === 'When');
   expect(when?.querySelector('.hero-content-12')?.textContent).toBe('26–27 February 2027');
 });
+
+it('removes the pending announcement while preserving the Pune venue', () => {
+  const html = readPage();
+  expect(html.includes('Exact dates and venue announced shortly')).toBe(false);
+  expect(pageDocument().querySelector('.hero-grid-3').textContent).toContain('Pune, Maharashtra, India');
+});
