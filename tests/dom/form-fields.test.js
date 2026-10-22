@@ -60,3 +60,11 @@ it('gives every form input and select a name', () => {
 it('loads the form initialization as a browser module', () => {
   expect(document.querySelector('script[src="js/audience-toggle.js"][type="module"]')).not.toBeNull();
 });
+
+it('renders a four-row Message textarea limited to 1000 characters', () => {
+  const field = document.querySelector('#register form textarea[name="message"]');
+  expect(field).not.toBeNull();
+  expect(field.getAttribute('maxlength')).toBe('1000');
+  expect(field.rows).toBe(4);
+  expect(field.classList.contains('register-input')).toBe(true);
+});
