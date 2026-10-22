@@ -92,3 +92,24 @@ it('removes the pending announcement while preserving the Pune venue', () => {
   expect(html.includes('Exact dates and venue announced shortly')).toBe(false);
   expect(pageDocument().querySelector('.hero-grid-3').textContent).toContain('Pune, Maharashtra, India');
 });
+
+it('lists only Synergy Technofin and QuantumLeap as organising partners', () => {
+  const document = pageDocument();
+  const descriptions = [...document.querySelectorAll('#organisers .organisers-text')];
+  const names = descriptions.map((text) => text.parentElement.querySelector('h3').textContent);
+  expect(names).toEqual(['Synergy Technofin', 'QuantumLeap (QLBS)']);
+  expect(document.querySelector('#organisers').textContent).not.toContain('Map My Crop');
+});
+
+it('places the Associate Partner block directly after organising partners', () => {
+  const nextBlock = pageDocument().querySelector('#organisers').nextElementSibling;
+  expect(nextBlock.id).toBe('associate-partner');
+  expect(nextBlock.querySelector('h2')?.textContent).toBe('Associate Partner');
+});
+
+it('places the Map My Crop card after the Associate Partner heading', () => {
+  const heading = pageDocument().querySelector('#associate-partner h2');
+  const card = heading?.nextElementSibling?.querySelector('.organisers-content-2');
+  expect(card?.querySelector('h3')?.textContent).toBe('Map My Crop');
+  expect(card?.querySelector('p')?.textContent).toContain('satellite AI-driven agriculture technology company');
+});
