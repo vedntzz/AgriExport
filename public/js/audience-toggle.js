@@ -23,12 +23,24 @@ function markAudienceOption(button, audience) {
   button.setAttribute('aria-pressed', String(active));
 }
 
+function setAudienceField(form, name, visible) {
+  const field = form.querySelector(`[name="${name}"]`);
+  field.closest('label').hidden = !visible;
+  field.toggleAttribute('required', visible);
+}
+
+function updateAudienceFields(form, sponsor) {
+  form.querySelector('[data-sponsor-fields]').hidden = !sponsor;
+  setAudienceField(form, 'category', !sponsor);
+  setAudienceField(form, 'package', sponsor);
+  setAudienceField(form, 'message', sponsor);
+}
 
 function selectAudience(form, audience) {
   const sponsor = audience === 'Sponsor';
   form.querySelector('input[name="audience"]').value = audience;
   form.querySelector('[type="submit"]').textContent = sponsor ? 'Send sponsorship enquiry' : 'Register as delegate';
-  form.querySelector('[data-sponsor-fields]').hidden = !sponsor;
+  updateAudienceFields(form, sponsor);
   form.querySelectorAll('[data-audience]').forEach((button) => markAudienceOption(button, audience));
 }
 

@@ -20,11 +20,25 @@ function expectActiveAudience(audience, active) {
   expect(audienceButton(audience).type).toBe('button');
 }
 
+function loadFormStyles() {
+  const style = document.createElement('style');
+  style.textContent = readFileSync(resolve('public/css/form.css'), 'utf8');
+  document.head.append(style);
+}
+
+function expectAudienceField(name, visible) {
+  const field = form.querySelector(`[name="${name}"]`);
+  const label = field.closest('label');
+  expect(label.hidden).toBe(!visible);
+  expect(getComputedStyle(label).display).toBe(visible ? 'flex' : 'none');
+  expect(field.hasAttribute('required')).toBe(visible);
+}
 
 beforeEach(async () => {
   vi.resetModules();
   document.body.innerHTML = page;
   form = document.querySelector('#register form');
+  loadFormStyles();
   await import('../../public/js/audience-toggle.js');
 });
 
@@ -82,4 +96,25 @@ it('shows sponsorship fields only for Sponsor', () => {
   expect(form.querySelector('[data-sponsor-fields]').hidden).toBe(false);
   chooseAudience('Delegate');
   expect(form.querySelector('[data-sponsor-fields]').hidden).toBe(true);
+});
+
+it('shows required Category and hides optional Package and Message by default', () => {
+  expectAudienceField('category', true);
+  expectAudienceField('package', false);
+  expectAudienceField('message', false);
+});
+
+it('shows required Package and Message and hides optional Category for Sponsor', () => {
+  chooseAudience('Sponsor');
+  expectAudienceField('category', false);
+  expectAudienceField('package', true);
+  expectAudienceField('message', true);
+});
+
+it('restores Delegate visibility and required attributes after switching back', () => {
+  chooseAudience('Sponsor');
+  chooseAudience('Delegate');
+  expectAudienceField('category', true);
+  expectAudienceField('package', false);
+  expectAudienceField('message', false);
 });
