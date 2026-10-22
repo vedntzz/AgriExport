@@ -68,3 +68,16 @@ it('renders a four-row Message textarea limited to 1000 characters', () => {
   expect(field.rows).toBe(4);
   expect(field.classList.contains('register-input')).toBe(true);
 });
+
+it('renders a required consent checkbox with the agreed label', () => {
+  const checkbox = document.querySelector('#register input[type="checkbox"][name="consent"]');
+  expect(checkbox).not.toBeNull();
+  expect(checkbox.hasAttribute('required')).toBe(true);
+  expect(checkbox.labels[0].textContent.trim()).toBe('I agree to be contacted about AgriXport India 2027.');
+  expect(checkbox.checked).toBe(false);
+});
+
+it('places consent directly above the submit controls', () => {
+  const label = document.querySelector('#register input[name="consent"]')?.closest('label');
+  expect(label?.nextElementSibling?.querySelector('button[type="submit"]')).toBeInstanceOf(HTMLButtonElement);
+});
