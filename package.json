@@ -4,10 +4,12 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "vitest run"
+    "test": "vitest run",
+    "qr": "node scripts/generate-qr.js"
   },
   "devDependencies": {
     "jsdom": "^26.1.0",
+    "qrcode": "^1.5.4",
     "vitest": "^3.2.0"
   },
   "dependencies": {
