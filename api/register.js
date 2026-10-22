@@ -1,6 +1,9 @@
 import { saveRegistration } from '../lib/db.js';
 import { isRateLimited } from '../lib/rate-limit.js';
 import { validateRegistration } from '../lib/validate.js';
+import { sendEmail } from '../lib/send-email.js';
+import { buildDelegateEmail } from '../lib/email-templates/delegate.js';
+import { buildSponsorEmail } from '../lib/email-templates/sponsor.js';
 
 const REGISTRATION_FIELDS = [
   'audience', 'prefix', 'full_name', 'designation', 'mobile', 'email',
@@ -25,11 +28,18 @@ function databaseRecord(body) {
   return Object.fromEntries(REGISTRATION_FIELDS.filter((field) => Object.hasOwn(body, field)).map((field) => [field, body[field]]));
 }
 
+async function sendConfirmation(body, id) {
+  try {
+    const buildEmail = body.audience === 'Delegate' ? buildDelegateEmail : buildSponsorEmail;
+    await sendEmail({ to: body.email, ...buildEmail(body) });
+  } catch (error) { console.error('Registration email failed', id, error); }
+}
+
 async function saveAndRespond(body, res) {
-  try { await saveRegistration(databaseRecord(body)); }
-  catch {
-    return res.status(500).json({ ok: false, message: 'Unable to save registration. Please try again.' });
-  }
+  let saved;
+  try { saved = await saveRegistration(databaseRecord(body)); }
+  catch { return res.status(500).json({ ok: false, message: 'Unable to save registration. Please try again.' }); }
+  await sendConfirmation(body, saved.id);
   return res.status(200).json({ ok: true });
 }
 

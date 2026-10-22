@@ -2,6 +2,13 @@ import { beforeEach, expect, it, vi } from 'vitest';
 import register from '../../api/register.js';
 import { saveRegistration } from '../../lib/db.js';
 import { isRateLimited } from '../../lib/rate-limit.js';
+import { sendEmail } from '../../lib/send-email.js';
+import { buildDelegateEmail } from '../../lib/email-templates/delegate.js';
+import { buildSponsorEmail } from '../../lib/email-templates/sponsor.js';
+
+vi.mock('../../lib/send-email.js', () => ({ sendEmail: vi.fn() }));
+vi.mock('../../lib/email-templates/delegate.js', () => ({ buildDelegateEmail: vi.fn() }));
+vi.mock('../../lib/email-templates/sponsor.js', () => ({ buildSponsorEmail: vi.fn() }));
 
 vi.mock('../../lib/db.js', () => ({ saveRegistration: vi.fn() }));
 vi.mock('../../lib/rate-limit.js', () => ({ isRateLimited: vi.fn() }));
@@ -29,7 +36,7 @@ async function submit(req) {
 
 function expectNoProcessing() {
   expect(isRateLimited).not.toHaveBeenCalled();
-  expect(saveRegistration).not.toHaveBeenCalled();
+  expectNoSave();
 }
 
 function expectSuccess(res) {
@@ -39,9 +46,9 @@ function expectSuccess(res) {
 
 beforeEach(() => {
   vi.restoreAllMocks();
-  vi.resetAllMocks();
+  resetEmailMocks();
   vi.mocked(isRateLimited).mockReturnValue(false);
-  vi.mocked(saveRegistration).mockResolvedValue(undefined);
+  vi.mocked(saveRegistration).mockResolvedValue({ id: 'registration-123' });
 });
 
 it.each(['GET', 'PUT', 'DELETE', 'OPTIONS'])('rejects %s with 405 before processing the body', async (method) => {
@@ -63,7 +70,7 @@ it('returns 429 before validating a rate-limited request', async () => {
   const res = await submit(request({}));
   expect(res.status).toHaveBeenCalledWith(429);
   expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ ok: false }));
-  expect(saveRegistration).not.toHaveBeenCalled();
+  expectNoSave();
 });
 
 it('passes the client IP and current time to the rate limiter', async () => {
@@ -90,7 +97,7 @@ it('returns validation errors with 400 and does not save', async () => {
   const res = await submit(request(validBody({ email: 'invalid' })));
   expect(res.status).toHaveBeenCalledWith(400);
   expect(res.json).toHaveBeenCalledWith({ ok: false, errors: { email: expect.any(String) } });
-  expect(saveRegistration).not.toHaveBeenCalled();
+  expectNoSave();
 });
 
 it.each([undefined, null, 'invalid', []])('returns 400 for a malformed body: %j', async (body) => {
@@ -98,7 +105,7 @@ it.each([undefined, null, 'invalid', []])('returns 400 for a malformed body: %j'
   req.body = body;
   const res = await submit(req);
   expect(res.status).toHaveBeenCalledWith(400);
-  expect(saveRegistration).not.toHaveBeenCalled();
+  expectNoSave();
 });
 
 it('saves a valid delegate and returns success', async () => {
@@ -128,5 +135,49 @@ it('returns a generic 500 response when saving fails', async () => {
   const res = await submit(request());
   expect(res.status).toHaveBeenCalledWith(500);
   expect(res.json).toHaveBeenCalledWith({ ok: false, message: 'Unable to save registration. Please try again.' });
-  expect(JSON.stringify(res.json.mock.calls)).not.toContain('Private database details');
+  expect(sendEmail).not.toHaveBeenCalled();
 });
+
+function resetEmailMocks() {
+  vi.resetAllMocks();
+  vi.mocked(sendEmail).mockResolvedValue({ id: 'email-123' });
+  vi.mocked(buildDelegateEmail).mockReturnValue({ subject: 'Delegate', html: '<p>Delegate</p>', text: 'Delegate' });
+  vi.mocked(buildSponsorEmail).mockReturnValue({ subject: 'Sponsor', html: '<p>Sponsor</p>', text: 'Sponsor' });
+}
+
+it.each(['Delegate', 'Sponsor'])('sends the %s confirmation to the registrant', async audience => {
+  const body = validBody({ audience, package: 'Gold' });
+  await submit(request(body));
+  const builder = audience === 'Delegate' ? buildDelegateEmail : buildSponsorEmail;
+  expect(builder).toHaveBeenCalledWith(expect.objectContaining({ audience }));
+  expect(sendEmail).toHaveBeenCalledExactlyOnceWith({ to: body.email, ...builder.mock.results[0].value });
+});
+
+it('waits for the database save before sending an email', async () => {
+  let finishSave;
+  vi.mocked(saveRegistration).mockReturnValue(new Promise(resolve => { finishSave = resolve; }));
+  const pending = submit(request());
+  expect(sendEmail).not.toHaveBeenCalled();
+  finishSave({ id: 'registration-123' }); await pending;
+});
+
+it('returns 200 and logs the registration id when email delivery fails', async () => {
+  const failure = new Error('Delivery failed');
+  vi.mocked(sendEmail).mockRejectedValue(failure);
+  const log = vi.spyOn(console, 'error').mockImplementation(() => {});
+  expectSuccess(await submit(request()));
+  expect(log).toHaveBeenCalledWith('Registration email failed', 'registration-123', failure);
+});
+
+it('returns 200 and logs the registration id when email construction fails', async () => {
+  const failure = new Error('Template failed');
+  vi.mocked(buildDelegateEmail).mockImplementation(() => { throw failure; });
+  const log = vi.spyOn(console, 'error').mockImplementation(() => {});
+  expectSuccess(await submit(request()));
+  expect(log).toHaveBeenCalledWith('Registration email failed', 'registration-123', failure);
+});
+
+function expectNoSave() {
+  expect(sendEmail).not.toHaveBeenCalled();
+  expect(saveRegistration).not.toHaveBeenCalled();
+}
