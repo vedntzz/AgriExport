@@ -81,3 +81,25 @@ it('places consent directly above the submit controls', () => {
   const label = document.querySelector('#register input[name="consent"]')?.closest('label');
   expect(label?.nextElementSibling?.querySelector('button[type="submit"]')).toBeInstanceOf(HTMLButtonElement);
 });
+
+function honeypotStyle() {
+  const style = document.createElement('style');
+  style.textContent = readFileSync(resolve('public/css/form.css'), 'utf8');
+  document.head.append(style);
+  return getComputedStyle(document.querySelector('#register input[name="website"]').closest('label'));
+}
+
+it('includes an empty honeypot excluded from keyboard navigation and autocomplete', () => {
+  const field = document.querySelector('#register form input[name="website"]');
+  expect(field).not.toBeNull();
+  expect(field.getAttribute('tabindex')).toBe('-1');
+  expect(field.getAttribute('autocomplete')).toBe('off');
+  expect(field.value).toBe('');
+});
+
+it('positions the honeypot off-screen and hides it from assistive technology', () => {
+  const field = document.querySelector('#register input[name="website"]');
+  expect(field?.closest('label')?.getAttribute('aria-hidden')).toBe('true');
+  expect(honeypotStyle().position).toBe('absolute');
+  expect(honeypotStyle().left).toBe('-10000px');
+});
