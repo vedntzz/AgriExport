@@ -42,8 +42,8 @@ it('uses native HTML instead of template elements and runtime scripts', () => {
 });
 
 it('starts with the delegate form and its resolved submit label', () => {
-  expect(pageDocument().querySelector('form select').value).toBe('Delegate');
-  expect(pageDocument().querySelector('form button[type="submit"]').textContent).toBe('Submit registration');
+  expect(pageDocument().querySelector('form input[name="audience"]').value).toBe('Delegate');
+  expect(pageDocument().querySelector('form button[type="submit"]').textContent).toBe('Register as delegate');
   expect(pageDocument().querySelector('[data-sponsor-fields]').hasAttribute('hidden')).toBe(true);
 });
 

@@ -15,3 +15,8 @@
 [data-site] .register-card { background: #BC0A08; color: #FFFFFF; border: 0; padding: 16px 32px; font-family: Archivo, sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; }
 [data-site] .register-card:hover { background: #FFFFFF; color: #101010; }
 [data-site] .register-label-4 { font-size: 14px; color: rgba(255,255,255,0.8); }
+[data-site] .audience-toggle { display: flex; gap: 10px; }
+[data-site] .audience-option { flex: 1; background: #1C1C1C; border: 1px solid rgba(255,255,255,0.28); border-radius: 10px; padding: 13px 14px; font-family: Archivo, sans-serif; font-size: 16px; color: #FFFFFF; cursor: pointer; }
+[data-site] .audience-option:hover { border-color: #9ED9C6; }
+[data-site] .audience-option.is-active { background: #146C5C; border-color: #9ED9C6; }
+[data-site] .audience-option:focus-visible { outline: 2px solid #9ED9C6; outline-offset: 3px; }

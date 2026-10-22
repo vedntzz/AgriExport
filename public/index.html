@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="css/sections.css">
 <link rel="stylesheet" href="css/form.css">
 <script src="js/carousel.js" defer></script>
+<script src="js/audience-toggle.js" defer></script>
 </head>
 <body>
 <div id="top" data-site="" class="site">
@@ -444,7 +445,14 @@
         </div>
       </div>
       <form class="register-form">
-        <label class="register-field"><span class="register-label-3">I am registering as</span><select class="register-select"><option value="Delegate">Delegate</option><option value="Sponsor">Sponsor</option></select></label>
+        <div class="register-field">
+          <span id="audience-label" class="register-label-3">I am registering as</span>
+          <div class="audience-toggle" role="group" aria-labelledby="audience-label">
+            <button type="button" class="audience-option is-active" data-audience="Delegate" aria-pressed="true">Delegate</button>
+            <button type="button" class="audience-option" data-audience="Sponsor" aria-pressed="false">Sponsor</button>
+          </div>
+          <input type="hidden" name="audience" value="Delegate">
+        </div>
         <div class="register-grid"><label class="register-field"><span class="register-label-3">Prefix</span><select class="register-select"><option value="Mr.">Mr.</option><option value="Ms.">Ms.</option><option value="Mrs.">Mrs.</option><option value="Other">Other</option></select></label><label class="register-field"><span class="register-label-3">Full name</span><input type="text" class="register-input"></label></div>
         <div class="register-grid"><label class="register-field"><span class="register-label-3">Designation</span><input type="text" class="register-input"></label><label class="register-field"><span class="register-label-3">Mobile number</span><input type="tel" class="register-input"></label></div>
         <label class="register-field"><span class="register-label-3">Email address</span><input type="email" class="register-input"></label>
@@ -452,7 +460,7 @@
         <div class="register-grid"><label class="register-field"><span class="register-label-3">Organisation</span><input type="text" class="register-input"></label><label class="register-field"><span class="register-label-3">Package of interest</span><select class="register-select"><option value="Platinum">Platinum — Rs. 25.00 Lacs</option><option value="Diamond">Diamond — Rs. 20.00 Lacs</option><option value="Gold">Gold — Rs. 15.00 Lacs</option><option value="Silver">Silver — Rs. 10.00 Lacs</option></select></label></div>
         </div>
         <div class="register-content-3">
-          <button type="submit" class="register-card">Submit registration</button>
+          <button type="submit" class="register-card">Register as delegate</button>
           <span class="register-label-4">The secretariat responds within five working days.</span>
         </div>
       </form>
