@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { expect, it } from 'vitest';
 
@@ -30,4 +30,12 @@ it('redirects /register to the registration section', () => {
   expect(config.redirects).toContainEqual({
     source: '/register', destination: '/#register', permanent: false,
   });
+});
+
+it('documents every environment variable in a README under 200 lines', () => {
+  expect(existsSync(new URL('README.md', projectRoot))).toBe(true);
+  const readme = readProjectFile('README.md');
+  expect(readme.split(/\r?\n/).length).toBeLessThan(200);
+  const variables = [...readProjectFile('.env.example').matchAll(/^([A-Z_]+)=/gm)].map(match => match[1]);
+  variables.forEach(variable => expect(readme).toContain(variable));
 });
