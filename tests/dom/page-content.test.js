@@ -124,3 +124,22 @@ it('shows the 2027 copyright year instead of 2026', () => {
   expect(pageDocument().querySelector('footer').textContent).toContain('© 2027');
   expect(readPage().includes('© 2026')).toBe(false);
 });
+
+const restoredImages = [
+  ['.header-image', 'assets/logo/logo-mark.png'],
+  ['.footer-image', 'assets/logo/logo-mark.png'],
+  ['.hero-image', 'assets/photo-produce.png'],
+  ['.hero-image-2', 'assets/photo-logistics-light.png'],
+  ['.objectives-image', 'assets/photo-port.png'],
+  ['.objectives-image-2', 'assets/photo-produce.png'],
+  ['.objectives-image-3', 'assets/photo-spices.png'],
+  ['.objectives-image-4', 'assets/circle-veg.png'],
+  ['.objectives-image-5', 'assets/photo-vineyard.png'],
+  ['.objectives-image-6', 'assets/photo-logistics-light.png'],
+];
+
+it.each(restoredImages)('loads the restored ZIP image for %s', (selector, source) => {
+  expect(pageDocument().querySelector(selector).getAttribute('src')).toBe(source);
+  const bytes = readFileSync(new URL(`../../public/${source}`, import.meta.url));
+  expect([...bytes.subarray(0, 8)]).toEqual([137, 80, 78, 71, 13, 10, 26, 10]);
+});
