@@ -143,3 +143,54 @@ it.each(restoredImages)('loads the restored ZIP image for %s', (selector, source
   const bytes = readFileSync(new URL(`../../public/${source}`, import.meta.url));
   expect([...bytes.subarray(0, 8)]).toEqual([137, 80, 78, 71, 13, 10, 26, 10]);
 });
+
+function mobileDocument() {
+  const document = pageDocument();
+  const style = document.createElement('style');
+  style.textContent = ['layout', 'form'].map(name => readFileSync(new URL(`../../public/css/${name}.css`, import.meta.url), 'utf8')).join('\n');
+  document.head.append(style);
+  return document;
+}
+
+function mobileRules(document, width) {
+  return [...document.styleSheets[0].cssRules].flatMap(rule => {
+    const maximum = rule.conditionText?.match(/max-width:\s*(\d+)px/);
+    return maximum && width <= Number(maximum[1]) ? [...rule.cssRules] : [];
+  });
+}
+
+function mobileProperty(selector, width, property) {
+  const document = mobileDocument();
+  const element = document.querySelector(selector);
+  const rules = mobileRules(document, width).filter(rule => rule.selectorText && element.matches(rule.selectorText));
+  const important = rules.filter(rule => rule.style.getPropertyPriority(property) === 'important');
+  return (important.length ? important : rules).map(rule => rule.style.getPropertyValue(property)).filter(Boolean).at(-1);
+}
+
+it.each([320, 390, 520, 768, 1024])('keeps navigation available at %ipx', width => {
+  expect(mobileProperty('header nav', width, 'display')).toBe('flex');
+  expect(mobileProperty('header nav', width, 'overflow-x')).toBe('auto');
+  expect(mobileProperty('header nav', width, 'flex-wrap')).toBe('nowrap');
+});
+
+it.each([320, 390, 520])('stacks registration fields and contains inputs at %ipx', width => {
+  expect(mobileProperty('.register-grid', width, 'grid-template-columns')).toBe('minmax(0, 1fr)');
+  expect(mobileProperty('.register-input', width, 'min-width')).toBe('0');
+  expect(mobileProperty('.register-input', width, 'box-sizing')).toBe('border-box');
+});
+
+it.each([320, 390, 520, 768])('contains the logistics caption at %ipx', width => {
+  expect(mobileProperty('.hero-content-17', width, 'left')).toBe('32px');
+  expect(mobileProperty('.hero-content-17', width, 'right')).toBe('32px');
+  expect(mobileProperty('.hero-content-17', width, 'max-width')).toBe('none');
+});
+
+it('keeps the expanded mobile header from covering anchor destinations', () => {
+  expect(mobileProperty('.header-content', 390, 'position')).toBe('static');
+  expect(mobileProperty('#register', 390, 'scroll-margin-top')).toBe('20px');
+});
+
+it('keeps the logo and register button compact on narrow phones', () => {
+  expect(mobileProperty('.header-image', 320, 'width')).toBe('140px');
+  expect(mobileProperty('.header-image', 320, 'height')).toBe('auto');
+});

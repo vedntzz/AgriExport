@@ -26,3 +26,11 @@
 [data-site] .form-error { margin: 0; }
 [data-site] [aria-invalid="true"] { outline: 2px solid #FFB4AB; outline-offset: 2px; }
 [data-site] .register-card:disabled { opacity: 0.65; cursor: wait; }
+
+@media (max-width: 520px) {
+  [data-site] .register-grid { grid-template-columns: minmax(0, 1fr); }
+  [data-site] .register-field, [data-site] .register-form { min-width: 0; }
+  [data-site] .register-input, [data-site] .register-select { width: 100%; min-width: 0; box-sizing: border-box; }
+  [data-site] .register-card { width: 100%; }
+  [data-site] .register-label-4, [data-site] .field-error, [data-site] .form-error { overflow-wrap: anywhere; }
+}

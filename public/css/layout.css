@@ -52,7 +52,7 @@
   @media (prefers-reduced-motion: reduce) { [data-marquee] { animation: none !important; } }
 
   [id] { scroll-margin-top: 150px; }
-  @media (max-width: 1280px) { [data-site] header nav { display: none !important; } [data-site] header img { height: 64px !important; } [id] { scroll-margin-top: 120px; } }
+  @media (max-width: 1280px) { [data-site] header img { height: 64px !important; } [id] { scroll-margin-top: 120px; } }
   @media (max-width: 900px) { [data-site] header img { height: 52px !important; } [data-site] header a[href="#sponsor"] { display: none !important; } }
   @media (max-width: 900px) {
     [data-site] :is(.unused-template-selector), [data-site] :is(.header-content-2, .header-navigation, .hero-grid, .hero-grid-2, .hero-title, .hero-grid-3, .hero-section-2, .hero-grid-5, .objectives-content, .objectives-grid-3, .objectives-label-5, .programme-section, .speakers-section, .audience-section, .hero-grid-8, .gallery-section, .sponsor-section, .partners-section, .supporting-section, .register-section, .footer-grid) { padding-left: 20px !important; padding-right: 20px !important; }
@@ -66,7 +66,6 @@
     [data-site] :is(.unused-template-selector) { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
     [data-site] :is(.hero-content-30) { padding: 48px 20px !important; }
     [data-site] :is(.speakers-section, .audience-section, .sponsor-section), [data-site] :is(.objectives-content, .register-section) { padding-top: 56px !important; padding-bottom: 56px !important; }
-    [data-site] header nav { display: none !important; }
     [data-site] footer :is(.footer-content-4) { text-align: left !important; }
     [data-site] img:is(.hero-image-2) { height: 220px !important; }
   }
@@ -75,3 +74,18 @@
     [data-gallery] { grid-template-columns: minmax(0, 1fr) !important; } [data-gallery] > * { grid-column: auto !important; grid-row: auto !important; }
     [data-site] :is(.objectives-grid-2), [data-site] :is(.speakers-grid, .gallery-grid-2), [data-site] :is(.unused-template-selector), [data-site] :is(.sponsor-grid-2) { grid-template-columns: minmax(0, 1fr) !important; }
   }
+
+@media (max-width: 1280px) {
+  [data-site] .header-content { position: static; }
+  [data-site] header nav { display: flex; flex: 1 1 100%; order: 3; justify-content: flex-start; flex-wrap: nowrap; overflow-x: auto; }
+  [data-site] .header-link-3 { flex: 0 0 auto; min-height: 44px; box-sizing: border-box; }
+  [data-site] [id] { scroll-margin-top: 20px; }
+}
+@media (max-width: 900px) {
+  [data-site] .header-navigation { gap: 12px; }
+  [data-site] .hero-content-17 { left: 32px; right: 32px; bottom: 12px; max-width: none; padding: 12px 16px; overflow-wrap: anywhere; }
+  [data-site] .hero-content-4 { box-sizing: border-box; max-width: 100%; }
+}
+@media (max-width: 520px) {
+  [data-site] header img { width: 140px; height: auto !important; }
+}
