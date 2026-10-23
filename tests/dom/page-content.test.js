@@ -191,6 +191,32 @@ it('keeps the expanded mobile header from covering anchor destinations', () => {
 });
 
 it('keeps the logo and register button compact on narrow phones', () => {
-  expect(mobileProperty('.header-image', 320, 'width')).toBe('140px');
+  expect(mobileProperty('.header-image', 320, 'width')).toBe('clamp(128px, 44vw, 168px)');
   expect(mobileProperty('.header-image', 320, 'height')).toBe('auto');
+});
+
+it.each([320, 390, 520])('gives the mobile logo priority over contact clutter at %ipx', width => {
+  expect(mobileProperty('.header-label', width, 'display')).toBe('none');
+  expect(mobileProperty('.header-link-5', width, 'min-height')).toBe('44px');
+  expect(mobileProperty('.header-link-3', width, 'border-radius')).toBe('999px');
+});
+
+it.each([320, 390, 520])('keeps the mobile hero readable at %ipx', width => {
+  expect(mobileProperty('.hero-title', width, 'padding')).toBe('0');
+  expect(mobileProperty('.hero-title', width, 'font-size')).toBe('clamp(30px, 8.8vw, 42px)');
+  expect(mobileProperty('.hero-text', width, 'font-size')).toBe('16px');
+});
+
+it.each([320, 390, 520])('places the logistics caption below its photo at %ipx', width => {
+  expect(mobileProperty('.hero-content-17', width, 'position')).toBe('static');
+  expect(mobileProperty('.hero-content-17', width, 'margin-top')).toBe('12px');
+});
+
+it('keeps mobile-only polish out of the desktop layout', () => {
+  expect(mobileRules(mobileDocument(), 1440)).toHaveLength(0);
+});
+
+it.each(['.objectives-heading', '.sessions-heading', '.sponsor-heading'])('fits the narrow-phone section title %s', selector => {
+  expect(mobileProperty(selector, 320, 'font-size')).toBe('clamp(28px, 8vw, 36px)');
+  expect(mobileProperty(selector, 320, 'overflow-wrap')).toBe('anywhere');
 });
