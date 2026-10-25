@@ -220,3 +220,34 @@ it.each(['.objectives-heading', '.sessions-heading', '.sponsor-heading'])('fits 
   expect(mobileProperty(selector, 320, 'font-size')).toBe('clamp(28px, 8vw, 36px)');
   expect(mobileProperty(selector, 320, 'overflow-wrap')).toBe('anywhere');
 });
+
+const eventGalleryImages = [
+  ['.gallery-card', 'event-delegates.jpg'],
+  ['.gallery-card-2', 'event-inaugural-ceremony.jpg'],
+  ['.gallery-card-3', 'event-technical-session.jpg'],
+  ['.gallery-card-4', 'event-audience-question.jpg'],
+  ['.gallery-card-5', 'event-panel-discussion.jpg'],
+  ['.gallery-card-6', 'event-keynote.jpg'],
+  ['.gallery-card-7', 'event-keynote-2.jpg'],
+];
+
+it.each(eventGalleryImages)('uses a real, lightweight event photo for %s', (selector, file) => {
+  expect(pageDocument().querySelector(selector).getAttribute('src')).toBe(`assets/${file}`);
+  const bytes = readFileSync(new URL(`../../public/assets/${file}`, import.meta.url));
+  expect([...bytes.subarray(0, 3)]).toEqual([255, 216, 255]);
+  expect(bytes.length).toBeLessThan(500_000);
+});
+
+it.each(eventGalleryImages)('lazy-loads %s with explicit image dimensions', selector => {
+  const image = pageDocument().querySelector(selector);
+  expect(image.getAttribute('loading')).toBe('lazy');
+  expect(image.getAttribute('decoding')).toBe('async');
+  expect(image.getAttribute('width')).toBe('1600');
+  expect(image.getAttribute('height')).toBe('1066');
+});
+
+it('replaces every unresolved gallery image reference', () => {
+  const images = [...pageDocument().querySelectorAll('#gallery img')];
+  expect(images).toHaveLength(7);
+  expect(images.every(image => image.getAttribute('src').startsWith('assets/event-'))).toBe(true);
+});
