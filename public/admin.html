@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#BC0A08">
+  <title>Registration desk | AgriXport India 2027</title>
+  <link rel="stylesheet" href="/css/admin.css">
+  <script type="module" src="/js/admin.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <a href="/" aria-label="AgriXport home"><img src="/assets/logo/logo-mark.png" alt="AgriXport India 2027" width="180" height="90"></a>
+    <a class="back-link" href="/">Back to event <span aria-hidden="true">↗</span></a>
+  </header>
+  <main>
+    <div class="intro">
+      <p class="eyebrow">AgriXport India 2027 · Organising team</p>
+      <h1>Registration desk<span>.</span></h1>
+      <p class="lede">Every connection starts here. View registrations and download the list you need.</p>
+      <p class="event-date">26–27 February 2027 <span aria-hidden="true">/</span> Pune, Maharashtra, India</p>
+    </div>
+    <aside class="test-notice"><strong>Open test environment</strong><span>This page and its downloads are public. Use dummy registrations only.</span></aside>
+    <section class="stats" aria-label="Registration totals">
+      <article class="stat"><p>All registrations</p><strong id="total-count">—</strong><span>The complete event list</span></article>
+      <article class="stat"><p>Delegates</p><strong id="delegate-count">—</strong><span>Conference registrations</span></article>
+      <article class="stat"><p>Sponsors</p><strong id="sponsor-count">—</strong><span>Partnership enquiries</span></article>
+    </section>
+    <section class="registrations" aria-labelledby="registrations-title">
+      <div class="panel-heading"><div><p class="eyebrow">Your event, at a glance</p><h2 id="registrations-title">Registrations</h2></div><button id="refresh" type="button">Refresh list</button></div>
+      <div class="toolbar">
+        <label for="audience">Show registrations<select id="audience"><option value="">All registrations</option><option value="Delegate">Delegates</option><option value="Sponsor">Sponsors</option></select></label>
+        <a id="download" class="download" aria-disabled="true">Download CSV <span aria-hidden="true">↓</span></a>
+      </div>
+      <p id="status" role="status" aria-live="polite">Loading registrations…</p>
+      <div class="table-wrap" tabindex="0" role="region" aria-label="Registration list, scroll for more columns">
+        <table><caption class="sr-only">Registration details, newest first. Dates shown in IST.</caption><thead><tr><th scope="col">Name</th><th scope="col">Audience</th><th scope="col">Organisation</th><th scope="col">Email</th><th scope="col">Mobile</th><th scope="col">Category / Package</th><th scope="col">Registered (IST)</th><th scope="col">Message</th></tr></thead><tbody id="registration-rows"></tbody></table>
+      </div>
+    </section>
+    <noscript>Enable JavaScript to view registrations. <a href="/api/admin-registrations?format=csv">Download all registrations as CSV</a>.</noscript>
+  </main>
+  <footer><span>© 2027 AgriXport India</span><span>Building Global Trust: Safe Food, Global Reach.</span></footer>
+</body>
+</html>
