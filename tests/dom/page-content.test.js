@@ -251,3 +251,16 @@ it('replaces every unresolved gallery image reference', () => {
   expect(images).toHaveLength(7);
   expect(images.every(image => image.getAttribute('src').startsWith('assets/event-'))).toBe(true);
 });
+
+it.each(['partners', 'supporting'])('hides the %s block while preserving its content', id => {
+  const section = pageDocument().querySelector(`section#${id}`);
+  expect(section.hidden).toBe(true);
+  expect(section.querySelector('h2')).not.toBeNull();
+  expect(section.querySelector('a[href="#register"]')).not.toBeNull();
+});
+
+it('hides navigation links to the temporarily hidden partners block', () => {
+  const links = [...pageDocument().querySelectorAll('a[href="#partners"]')];
+  expect(links.length).toBeGreaterThan(0);
+  expect(links.every(link => link.hidden)).toBe(true);
+});
