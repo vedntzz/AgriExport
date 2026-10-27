@@ -41,7 +41,7 @@ function expectNoProcessing() {
 
 function expectSuccess(res) {
   expect(res.status).toHaveBeenCalledWith(200);
-  expect(res.json).toHaveBeenCalledWith({ ok: true });
+  expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ ok: true }));
 }
 
 beforeEach(() => {
@@ -181,3 +181,17 @@ function expectNoSave() {
   expect(sendEmail).not.toHaveBeenCalled();
   expect(saveRegistration).not.toHaveBeenCalled();
 }
+
+it('never saves a Sponsor package or message for a Delegate', async () => {
+  await submit(request(validBody({ package: 'Silver', message: 'Stale enquiry' })));
+  const record = vi.mocked(saveRegistration).mock.calls[0][0];
+  expect(record).not.toHaveProperty('package');
+  expect(record).not.toHaveProperty('message');
+});
+
+it.each([true, false])('reports email submission as %s without losing registration success', async sent => {
+  if (!sent) { vi.mocked(sendEmail).mockRejectedValue(new Error('Rejected')); vi.spyOn(console, 'error').mockImplementation(() => {}); }
+  const res = await submit(request());
+  expect(res.status).toHaveBeenCalledWith(200);
+  expect(res.json).toHaveBeenCalledWith({ ok: true, email_sent: sent });
+});

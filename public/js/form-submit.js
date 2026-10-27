@@ -9,11 +9,11 @@ function setSending(form, sending) {
   button.textContent = sending ? 'Sending…' : form.elements.namedItem('audience').value === 'Sponsor' ? 'Send sponsorship enquiry' : 'Register as delegate';
 }
 
-function showThankYou(form) {
+function showThankYou(form, emailSent) {
   const message = document.createElement('div');
   message.className = 'register-form';
   message.setAttribute('role', 'status');
-  message.textContent = 'Thank you for your interest in AgriXport India 2027.';
+  message.textContent = emailSent === false ? 'Thank you. Your registration is saved, but we could not send your confirmation email. Please contact info@synergytechnofin.com if you need assistance.' : 'Thank you for your interest in AgriXport India 2027.';
   form.replaceWith(message);
 }
 
@@ -23,7 +23,7 @@ async function showServerErrors(form, response) {
 }
 
 async function handleResponse(form, response) {
-  if (response.status === 200) return showThankYou(form);
+  if (response.status === 200) return showThankYou(form, (await response.json()).email_sent);
   if (response.status === 400) return showServerErrors(form, response);
   showFormError(form, FAILURE_MESSAGE);
 }

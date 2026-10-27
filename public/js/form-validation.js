@@ -42,10 +42,17 @@ function registrationErrors(body) {
   return errors;
 }
 
+export function normalizeRegistration(body) {
+  if (body.audience === 'Delegate') ['package', 'message'].forEach(field => { delete body[field]; });
+  if (body.audience === 'Sponsor') delete body.category;
+  return body;
+}
+
 export function validateRegistration(body) {
   if (!body || typeof body !== 'object' || Array.isArray(body)) return { ok: false, errors: { body: 'Provide a registration object.' } };
   trimRegistrationStrings(body);
   const errors = registrationErrors(body);
+  if (!Object.keys(errors).length) normalizeRegistration(body);
   return { ok: Object.keys(errors).length === 0, errors };
 }
 

@@ -34,3 +34,17 @@ it('rejects invalid email, phone, category, consent and message length', () => {
     category: 'Unknown', consent: false, message: 'x'.repeat(1001) }));
   expect(Object.keys(result.errors).sort()).toEqual(['category', 'consent', 'email', 'message', 'mobile']);
 });
+
+it('removes Sponsor-only fields from a valid Delegate payload', () => {
+  const body = registration({ package: 'Platinum', message: 'Old enquiry' });
+  expect(validateRegistration(body).ok).toBe(true);
+  expect(body).not.toHaveProperty('package');
+  expect(body).not.toHaveProperty('message');
+});
+
+it('removes the delegate category from a valid Sponsor payload', () => {
+  const body = registration({ audience: 'Sponsor', package: 'Gold' });
+  expect(validateRegistration(body).ok).toBe(true);
+  expect(body).not.toHaveProperty('category');
+  expect(body.package).toBe('Gold');
+});

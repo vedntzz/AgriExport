@@ -96,3 +96,18 @@ it('propagates a rejected fetch request', async () => {
   query.range.mockRejectedValue(new Error('Network unavailable'));
   await expect(fetchRegistrations()).rejects.toThrow('Network unavailable');
 });
+
+it('cleans historical Delegate packages when fetching for admin and CSV', async () => {
+  configureFetchMock([{ ...record, category: 'Exporter', package: 'Silver', message: 'Stale' }]);
+  const [row] = await fetchRegistrations();
+  expect(row).not.toHaveProperty('package');
+  expect(row).not.toHaveProperty('message');
+  expect(row.category).toBe('Exporter');
+});
+
+it('cleans historical Sponsor categories while retaining the enquiry', async () => {
+  configureFetchMock([{ ...record, audience: 'Sponsor', category: 'Exporter', package: 'Gold', message: 'Hello' }]);
+  const [row] = await fetchRegistrations();
+  expect(row).not.toHaveProperty('category');
+  expect(row).toMatchObject({ package: 'Gold', message: 'Hello' });
+});

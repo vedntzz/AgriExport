@@ -40,7 +40,7 @@ function pendingResponse() {
 
 beforeEach(async () => {
   vi.resetModules();
-  vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ status: 200 }));
+  vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ status: 200, json: async () => ({ ok: true, email_sent: true }) }));
   prepareForm();
   await loadFormModules();
   fillValidForm();
@@ -136,4 +136,12 @@ it('clears a field error immediately when the value is corrected', () => {
 it('keeps Organisation visible and fillable for Delegate', () => {
   const field = form.elements.namedItem('organisation');
   expect(field.closest('[hidden]')).toBeNull();
+});
+
+it('explains email failure after a successful registration without inviting duplicate submissions', async () => {
+  fetch.mockResolvedValue({ status: 200, json: async () => ({ ok: true, email_sent: false }) });
+  submitForm();
+  await vi.waitFor(() => expect(document.querySelector('#register form')).toBeNull());
+  expect(document.querySelector('#register [role="status"]').textContent).toContain('registration is saved');
+  expect(document.querySelector('#register [role="status"]').textContent).toContain('could not send');
 });

@@ -31,16 +31,16 @@ function databaseRecord(body) {
 async function sendConfirmation(body, id) {
   try {
     const buildEmail = body.audience === 'Delegate' ? buildDelegateEmail : buildSponsorEmail;
-    await sendEmail({ to: body.email, ...buildEmail(body) });
-  } catch (error) { console.error('Registration email failed', id, error); }
+    await sendEmail({ to: body.email, ...buildEmail(body) }); return true;
+  } catch (error) { console.error('Registration email failed', id, error); return false; }
 }
 
 async function saveAndRespond(body, res) {
   let saved;
   try { saved = await saveRegistration(databaseRecord(body)); }
   catch { return res.status(500).json({ ok: false, message: 'Unable to save registration. Please try again.' }); }
-  await sendConfirmation(body, saved.id);
-  return res.status(200).json({ ok: true });
+  const emailSent = await sendConfirmation(body, saved.id);
+  return res.status(200).json({ ok: true, email_sent: emailSent });
 }
 
 export default async function register(req, res) {
