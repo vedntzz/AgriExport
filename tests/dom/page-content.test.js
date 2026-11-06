@@ -128,20 +128,29 @@ it('shows the 2027 copyright year instead of 2026', () => {
 const restoredImages = [
   ['.header-image', 'assets/logo/logo-mark.png'],
   ['.footer-image', 'assets/logo/logo-mark.png'],
-  ['.hero-image', 'assets/photo-produce.png'],
-  ['.hero-image-2', 'assets/photo-logistics-light.png'],
-  ['.objectives-image', 'assets/photo-port.png'],
-  ['.objectives-image-2', 'assets/photo-produce.png'],
-  ['.objectives-image-3', 'assets/photo-spices.png'],
-  ['.objectives-image-4', 'assets/circle-veg.png'],
-  ['.objectives-image-5', 'assets/photo-vineyard.png'],
-  ['.objectives-image-6', 'assets/photo-logistics-light.png'],
+  ['.hero-image', 'assets/produce-market.jpg'],
+  ['.hero-image-2', 'assets/watermelon-cargo.jpg'],
+  ['.objectives-image', 'assets/export-container-ship.jpg'],
+  ['.objectives-image-2', 'assets/produce-market.jpg'],
+  ['.objectives-image-3', 'assets/fresh-vegetables.jpg'],
+  ['.objectives-image-4', 'assets/produce-processing.jpg'],
+  ['.objectives-image-5', 'assets/punjab-farmland.jpg'],
+  ['.objectives-image-6', 'assets/port-terminal.jpg'],
 ];
 
-it.each(restoredImages)('loads the restored ZIP image for %s', (selector, source) => {
+it.each(restoredImages)('loads the final-design photo or logo for %s', (selector, source) => {
   expect(pageDocument().querySelector(selector).getAttribute('src')).toBe(source);
   const bytes = readFileSync(new URL(`../../public/${source}`, import.meta.url));
-  expect([...bytes.subarray(0, 8)]).toEqual([137, 80, 78, 71, 13, 10, 26, 10]);
+  const signature = source.endsWith('.jpg') ? [255, 216, 255] : [137, 80, 78];
+  expect([...bytes.subarray(0, 3)]).toEqual(signature);
+  if (source.endsWith('.jpg')) expect(bytes.length).toBeLessThan(350_000);
+});
+
+it('describes the final-design hero and agricultural photos accurately', () => {
+  const document = pageDocument();
+  expect(document.querySelector('.hero-image').alt).toBe('Crates of grapes, oranges and apples at a produce market');
+  expect(document.querySelector('.hero-image-2').alt).toBe('Aerial view of a cargo boat loaded with watermelons');
+  expect(document.querySelector('.objectives-image-4').alt).toBe('Quality sorting of produce on a processing line');
 });
 
 function mobileDocument() {
