@@ -354,3 +354,20 @@ it('gives the About copy eight desktop grid columns', () => {
   document.head.append(style);
   expect(document.defaultView.getComputedStyle(document.querySelector('.about-copy')).gridColumn).toBe('5 / span 8');
 });
+
+const approvedFonts = ['archivo-vietnamese', 'archivo-latin-ext', 'archivo-latin', 'archivo-narrow-vietnamese', 'archivo-narrow-latin-ext', 'archivo-narrow-latin'];
+
+it.each(approvedFonts)('ships the approved %s font as a real WOFF2 asset', name => {
+  expect(pageDocument().querySelector('link[href="css/base.css?v=38"]')).not.toBeNull();
+  const css = readFileSync(new URL('../../public/css/base.css', import.meta.url), 'utf8');
+  expect(css).toContain(`../assets/fonts/${name}.woff2`);
+  const font = readFileSync(new URL(`../../public/assets/fonts/${name}.woff2`, import.meta.url));
+  expect(font.subarray(0, 4).toString()).toBe('wOF2');
+});
+
+it('contains no unresolved font references from the HTML bundle', () => {
+  const css = readFileSync(new URL('../../public/css/base.css', import.meta.url), 'utf8');
+  const sources = [...css.matchAll(/src: url\("([^" ]+)"\)/g)].map(match => match[1]);
+  expect(sources.length).toBeGreaterThan(0);
+  expect(sources.every(source => source.startsWith('../assets/fonts/') && source.endsWith('.woff2'))).toBe(true);
+});
