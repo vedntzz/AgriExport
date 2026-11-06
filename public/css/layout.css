@@ -53,7 +53,7 @@
 
   [id] { scroll-margin-top: 150px; }
   @media (max-width: 1280px) { [data-site] header img { height: 64px !important; } [id] { scroll-margin-top: 120px; } }
-  @media (max-width: 900px) { [data-site] header img { height: 52px !important; } [data-site] header a[href="#sponsor"] { display: none !important; } }
+  @media (max-width: 900px) { [data-site] header img { height: 52px !important; } [data-site] .header-content-3 a[href="#sponsor"] { display: none !important; } }
   @media (max-width: 900px) {
     [data-site] :is(.unused-template-selector), [data-site] :is(.header-content-2, .header-navigation, .hero-grid, .hero-grid-2, .hero-title, .hero-grid-3, .hero-section-2, .hero-grid-5, .objectives-content, .objectives-grid-3, .objectives-label-5, .programme-section, .speakers-section, .audience-section, .hero-grid-8, .gallery-section, .sponsor-section, .partners-section, .supporting-section, .register-section, .footer-grid) { padding-left: 20px !important; padding-right: 20px !important; }
     [data-site] :is(.hero-grid) { display: none !important; }
@@ -77,7 +77,7 @@
 
 @media (max-width: 1280px) {
   [data-site] .header-content { position: static; }
-  [data-site] header nav { display: flex; flex: 1 1 100%; order: 3; justify-content: flex-start; flex-wrap: nowrap; overflow-x: auto; }
+  [data-site] header nav { display: flex; flex: 1 1 100%; order: 3; justify-content: flex-start; flex-wrap: wrap; overflow-x: visible; }
   [data-site] .header-link-3 { flex: 0 0 auto; min-height: 44px; box-sizing: border-box; }
   [data-site] [id] { scroll-margin-top: 20px; }
 }
@@ -98,7 +98,7 @@
   [data-site].site .header-link-2 { min-width: 0; }
   [data-site].site .header-image { max-width: 100%; object-fit: contain; }
   [data-site].site .header-link-5 { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; box-sizing: border-box; padding: 10px 14px; border-radius: 10px; }
-  [data-site].site .header-links { flex-wrap: nowrap; justify-content: flex-start; gap: 8px; padding-top: 6px; padding-bottom: 4px; }
+  [data-site].site .header-links { flex-wrap: wrap; justify-content: flex-start; gap: 8px; padding-top: 6px; padding-bottom: 4px; }
   [data-site].site .header-link-3 { border-radius: 999px; background: #F2F5F3; font-size: 12px; padding: 12px 16px; }
   [data-site].site .hero-grid-2 { padding-top: 30px; padding-bottom: 28px; }
   [data-site].site .hero-title { padding: 0 !important; font-family: Arial, sans-serif; font-size: clamp(30px, 8.8vw, 42px); line-height: 1.02; letter-spacing: -0.035em; margin-bottom: 20px; }

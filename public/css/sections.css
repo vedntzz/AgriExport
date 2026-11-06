@@ -165,3 +165,8 @@
 [data-site] .about-copy .organisers-text { font-size: 16px; }
 [data-site] .register-contact-link { color: #FFFFFF; text-decoration: underline; text-underline-offset: 3px; overflow-wrap: anywhere; }
 [data-site] .register-contact-link:hover { color: #C6E5DB; }
+
+[data-site] .speaker-announcement { grid-column: 5 / span 8; align-self: start; min-width: 0; padding: clamp(24px, 4vw, 40px); border-top: 2px solid #146C5C; border-radius: 0 0 18px 18px; background: #F2F5F3; }
+[data-site] .speaker-announcement h3 { margin: 12px 0; font-family: 'Archivo Narrow', sans-serif; font-size: clamp(26px, 3vw, 38px); line-height: 1.1; }
+[data-site] .speaker-announcement p { margin: 0 0 24px; max-width: 60ch; color: #45454A; font-size: 16px; line-height: 1.6; }
+[data-site] .speaker-announcement a { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; box-sizing: border-box; }

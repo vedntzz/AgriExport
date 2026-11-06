@@ -178,8 +178,8 @@ function mobileProperty(selector, width, property) {
 
 it.each([320, 390, 520, 768, 1024])('keeps navigation available at %ipx', width => {
   expect(mobileProperty('header nav', width, 'display')).toBe('flex');
-  expect(mobileProperty('header nav', width, 'overflow-x')).toBe('auto');
-  expect(mobileProperty('header nav', width, 'flex-wrap')).toBe('nowrap');
+  expect(mobileProperty('header nav', width, 'overflow-x')).toBe('visible');
+  expect(mobileProperty('header nav', width, 'flex-wrap')).toBe('wrap');
 });
 
 it.each([320, 390, 520])('stacks registration fields and contains inputs at %ipx', width => {
@@ -344,7 +344,7 @@ it('does not promise stage or souvenir benefits to every sponsor tier', () => {
 
 it('refreshes the About stylesheet so cached layouts cannot collapse its copy', () => {
   const link = pageDocument().querySelector('link[href^="css/sections.css"]');
-  expect(link.getAttribute('href')).toBe('css/sections.css?v=36');
+  expect(link.getAttribute('href')).toBe('css/sections.css?v=39');
 });
 
 it('gives the About copy eight desktop grid columns', () => {
@@ -370,4 +370,26 @@ it('contains no unresolved font references from the HTML bundle', () => {
   const sources = [...css.matchAll(/src: url\("([^" ]+)"\)/g)].map(match => match[1]);
   expect(sources.length).toBeGreaterThan(0);
   expect(sources.every(source => source.startsWith('../assets/fonts/') && source.endsWith('.woff2'))).toBe(true);
+});
+
+it('replaces empty speaker portraits with an honest announcement', () => {
+  const section = pageDocument().querySelector('#speakers');
+  expect(section.querySelector('h2').textContent).toBe('Speakers');
+  expect(section.textContent).toContain('Speaker announcements coming soon');
+  expect(section.textContent).not.toMatch(/Confirmed|Portrait|Designation, organisation|To be announced/);
+  expect(section.querySelectorAll('.speakers-content-2')).toHaveLength(0);
+});
+
+it('keeps a clear route from the speaker announcement to registration', () => {
+  const link = pageDocument().querySelector('#speakers .speaker-announcement a');
+  expect(link?.getAttribute('href')).toBe('#register');
+  expect(link?.textContent).toBe('Register your interest');
+});
+
+it('refreshes the mobile navigation stylesheet after changing its layout', () => {
+  expect(pageDocument().querySelector('link[href="css/layout.css?v=39"]')).not.toBeNull();
+});
+
+it.each([320, 390, 768])('keeps the Sponsorship navigation link available at %ipx', width => {
+  expect(mobileProperty('header nav a[href="#sponsor"]', width, 'display')).not.toBe('none');
 });
