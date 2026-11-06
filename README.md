@@ -155,3 +155,19 @@ Regenerate whenever the canonical domain changes. Final production assets still 
 - [ ] Check names, enquiry details, event details and website links in the received emails.
 - [ ] Download the CSV and confirm its columns, IST timestamps, accents and ₹ render correctly in Excel.
 - [ ] Download each audience-filtered CSV and confirm the filter is respected.
+
+## Search and sharing
+
+The current canonical homepage is https://agriexport-six.vercel.app/.
+Search descriptions, Open Graph/Twitter previews and Event JSON-LD are in public/index.html.
+The sharing image uses the existing event logo; individual platforms may crop or cache it.
+public/sitemap.xml lists the homepage; public/robots.txt excludes API routes from crawling.
+The admin page has noindex metadata; API authentication, rather than robots.txt, protects registration data.
+When the purchased domain works over HTTPS, update the canonical, og:url, image URLs and Event URL in public/index.html,
+plus the sitemap URL in public/robots.txt and the homepage URL in public/sitemap.xml.
+Update SITE_URL in Vercel and regenerate the QR separately; it does not rewrite these static files.
+Add the confirmed venue name and street address to the visible page and JSON-LD when available.
+Dates are date-only until session times are confirmed; no unconfirmed prices or speakers are included in the markup.
+Validate the event using https://search.google.com/test/rich-results and resolve venue-related issues before promotion.
+Verify the final domain in Google Search Console, submit /sitemap.xml, and inspect the homepage URL.
+Search and social platforms decide when to crawl or refresh previews; metadata does not guarantee rankings or rich results.

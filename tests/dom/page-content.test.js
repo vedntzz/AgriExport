@@ -46,7 +46,7 @@ it('keeps all styles in external stylesheets', () => {
 });
 
 it('uses native HTML instead of template elements and runtime scripts', () => {
-  expect(pageDocument().querySelector('x-dc, helmet, sc-if, sc-raw-select, script[type="text/x-dc"], script[data-dc-script], script:not([src])')).toBeNull();
+  expect(pageDocument().querySelector('x-dc, helmet, sc-if, sc-raw-select, script[type="text/x-dc"], script[data-dc-script], script:not([src]):not([type="application/ld+json"])')).toBeNull();
 });
 
 it('starts with the delegate form and its resolved submit label', () => {
@@ -460,4 +460,47 @@ it('links privacy immediately before the existing required consent checkbox', ()
 
 it.each(['Vercel', 'Supabase', 'Google Gmail or Resend'])('identifies %s in the privacy notice', provider => {
   expect(pageDocument().querySelector('#privacy')?.textContent).toContain(provider);
+});
+
+const canonicalSite = 'https://agriexport-six.vercel.app/';
+const searchDescription = 'Join AgriXport India 2027 in Pune on 26–27 February 2027. Explore agricultural exports, food safety, traceability and global trade. Register or enquire about sponsorship.';
+
+it('describes the event, date and location in search metadata', () => {
+  const document = pageDocument();
+  expect(document.title).toBe('AgriXport India 2027 | 26–27 February | Pune');
+  expect(document.querySelector('meta[name="description"]')?.content).toBe(searchDescription);
+  expect(document.querySelector('link[rel="canonical"]')?.href).toBe(canonicalSite);
+  expect(document.querySelector('meta[name="robots"]')?.content).toBe('index, follow, max-image-preview:large');
+});
+
+it.each([['og:title', 'AgriXport India 2027 | 26–27 February | Pune'], ['og:description', searchDescription], ['og:url', canonicalSite], ['og:type', 'website'], ['og:site_name', 'AgriXport India 2027'], ['og:image', `${canonicalSite}assets/logo/logo-mark.png`], ['og:image:alt', 'AgriXport India 2027 logo']])('provides the %s sharing metadata', (property, value) => {
+  expect(pageDocument().querySelector(`meta[property="${property}"]`)?.content).toBe(value);
+});
+
+it.each([['twitter:card', 'summary'], ['twitter:title', 'AgriXport India 2027 | 26–27 February | Pune'], ['twitter:description', searchDescription], ['twitter:image', `${canonicalSite}assets/logo/logo-mark.png`], ['twitter:image:alt', 'AgriXport India 2027 logo']])('provides the %s card metadata', (name, value) => {
+  expect(pageDocument().querySelector(`meta[name="${name}"]`)?.content).toBe(value);
+});
+
+function structuredEvent() {
+  return JSON.parse(pageDocument().querySelector('script[type="application/ld+json"]')?.textContent || '{}');
+}
+
+it('provides machine-readable confirmed event dates without invented times or prices', () => {
+  const event = structuredEvent();
+  expect(event).toMatchObject({ '@context': 'https://schema.org', '@type': 'Event', name: 'AgriXport India 2027', startDate: '2027-02-26', endDate: '2027-02-27', url: canonicalSite });
+  expect(event.eventAttendanceMode).toBe('https://schema.org/OfflineEventAttendanceMode');
+  expect(event.eventStatus).toBe('https://schema.org/EventScheduled');
+  expect(event.offers).toBeUndefined();
+});
+
+it('limits structured location to the confirmed city and identifies the organiser', () => {
+  const event = structuredEvent();
+  expect(event.location).toEqual({ '@type': 'Place', name: 'Pune, Maharashtra, India', address: { '@type': 'PostalAddress', addressLocality: 'Pune', addressRegion: 'Maharashtra', addressCountry: 'IN' } });
+  expect(event.organizer).toMatchObject({ '@type': 'Organization', name: 'Synergy Technofin', url: 'https://www.synergytechnofin.com' });
+  expect(event.image).toContain(`${canonicalSite}assets/produce-market.jpg`);
+});
+
+it('keeps the admin page excluded from search results', () => {
+  const document = new JSDOM(readFileSync(new URL('../../public/admin.html', import.meta.url), 'utf8')).window.document;
+  expect(document.querySelector('meta[name="robots"]')?.content).toBe('noindex, nofollow');
 });

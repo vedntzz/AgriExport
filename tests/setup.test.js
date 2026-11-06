@@ -39,3 +39,17 @@ it('documents every environment variable in a README under 200 lines', () => {
   const variables = [...readProjectFile('.env.example').matchAll(/^([A-Z_]+)=/gm)].map(match => match[1]);
   variables.forEach(variable => expect(readme).toContain(variable));
 });
+
+it('publishes crawler rules with the working sitemap and excludes API routes', () => {
+  const robots = readProjectFile('public/robots.txt');
+  expect(robots).toContain('User-agent: *');
+  expect(robots).toContain('Disallow: /api/');
+  expect(robots).toContain('Sitemap: https://agriexport-six.vercel.app/sitemap.xml');
+});
+
+it('lists only the canonical homepage in the sitemap', () => {
+  const sitemap = readProjectFile('public/sitemap.xml');
+  expect(sitemap).toContain('xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"');
+  expect([...sitemap.matchAll(/<loc>(.*?)<\/loc>/g)].map(match => match[1])).toEqual(['https://agriexport-six.vercel.app/']);
+  expect(sitemap).not.toMatch(/admin|api|#register/);
+});
