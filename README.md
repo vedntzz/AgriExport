@@ -53,7 +53,7 @@ The complete variable list is in .env.example. Configure values in Vercel Projec
 | SUPABASE_SERVICE_KEY | Supabase server secret key, or service_role key, with privileged database access. |
 | RESEND_API_KEY | Resend API key used to send confirmation emails. |
 | FROM_EMAIL | Sender address on a verified Resend domain; may include a display name. |
-| ADMIN_EXPORT_TOKEN | Long, randomly generated secret protecting CSV downloads. |
+| ADMIN_EXPORT_TOKEN | Long, randomly generated secret protecting the registration desk and CSV downloads. |
 | SITE_URL | Canonical HTTPS origin, such as https://YOUR-DOMAIN; used in emails and QR generation. |
 | EMAIL_PROVIDER | resend (default) or gmail for Gmail SMTP testing. |
 | GMAIL_USER | Gmail sender account when EMAIL_PROVIDER=gmail. |
@@ -108,8 +108,11 @@ Acceptance is not proof of inbox delivery. A send failure leaves the registratio
 Delegate packages/messages and Sponsor categories are excluded from saved payloads and from reads for existing admin/CSV records.
 Historical database rows are not rewritten; irrelevant values are suppressed when displayed or exported.
 The live website is the version with seven supplied conference photos in the previous-event gallery.
-The open test dashboard is /admin.html; it and /api/admin-registrations expose test registration data without sign-in.
-Use dummy data there and add access control before handling real registrations.
+The dashboard is /admin.html. Its registration API and CSV downloads require HTTP Basic authentication over HTTPS.
+Use username admin and the password configured as ADMIN_EXPORT_TOKEN; the password stays on the server.
+Before public launch, replace the old test token with a long random secret in Vercel and redeploy.
+Browser credentials may remain cached until the browser session closes; use a private window on shared computers.
+Use dummy data until the production password and final launch checks are complete.
 
 ## Download registrations as CSV
 

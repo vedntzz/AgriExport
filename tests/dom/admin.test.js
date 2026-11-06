@@ -21,12 +21,12 @@ async function load() {
   await settle();
 }
 
-it('loads branded assets, a mobile viewport and explicit test access notice', async () => {
+it('loads branded assets, a mobile viewport and private access notice', async () => {
   await load();
   expect(field('meta[name="viewport"]')).not.toBeNull();
   expect(field('link[href="/css/admin.css"]')).not.toBeNull();
   expect(field('img[alt="AgriXport India 2027"]')).not.toBeNull();
-  expect(document.body.textContent).toContain('Open test environment');
+  expect(document.body.textContent).toContain('Private organising team access');
 });
 
 it('fetches registrations and renders total and audience counts', async () => {
