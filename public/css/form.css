@@ -34,3 +34,11 @@
   [data-site] .register-card { width: 100%; }
   [data-site] .register-label-4, [data-site] .field-error, [data-site] .form-error { overflow-wrap: anywhere; }
 }
+
+[data-site] .registration-privacy { margin-top: 24px; border-top: 1px solid rgba(255,255,255,0.3); padding-top: 16px; font-size: 14px; line-height: 1.65; overflow-wrap: anywhere; }
+[data-site] .registration-privacy summary { padding: 10px 0; min-height: 24px; font-weight: 600; cursor: pointer; }
+[data-site] .registration-privacy p { margin: 12px 0 0; color: rgba(255,255,255,0.85); }
+[data-site] .registration-privacy-link { margin: 0 0 -10px; font-size: 14px; line-height: 1.6; color: rgba(255,255,255,0.85); }
+[data-site] .registration-privacy a, [data-site] .registration-privacy-link a { color: #FFFFFF; text-decoration: underline; text-underline-offset: 3px; overflow-wrap: anywhere; }
+[data-site] .registration-privacy a:hover, [data-site] .registration-privacy-link a:hover { color: #C6E5DB; }
+[data-site] .registration-privacy summary:focus-visible, [data-site] .registration-privacy a:focus-visible, [data-site] .registration-privacy-link a:focus-visible { outline: 2px solid #9ED9C6; outline-offset: 4px; }

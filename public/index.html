@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="css/base.css?v=38">
 <link rel="stylesheet" href="css/layout.css?v=39">
 <link rel="stylesheet" href="css/sections.css?v=40">
-<link rel="stylesheet" href="css/form.css">
+<link rel="stylesheet" href="css/form.css?v=41">
 <script src="js/carousel.js" defer></script>
 <script src="js/audience-toggle.js" type="module" defer></script>
 <script src="js/form-submit.js" type="module"></script>
@@ -470,6 +470,13 @@
           <span>Ms. Vandana Khurana<br><a href="mailto:khurana.v@synergytechnofin.com" class="register-contact-link">khurana.v@synergytechnofin.com</a></span>
           <span class="register-label-2">26–27 February 2027</span>
         </div>
+        <details id="privacy" class="registration-privacy">
+          <summary>Registration privacy notice</summary>
+          <p>The AgriXport India 2027 organising team, including Synergy Technofin, uses the information you submit to process registrations, send confirmations and event updates, and respond to sponsorship enquiries.</p>
+          <p>The form collects your registration type, name, designation, organisation, email address and mobile number, together with your delegate category or sponsorship package and message, where applicable. Your consent and registration date are also recorded.</p>
+          <p>The website is hosted on Vercel, registration records are stored in Supabase, and confirmation emails are sent using Google Gmail or Resend, depending on the configured email service. Registration details are available to the organising team through a password-protected registration desk and CSV exports.</p>
+          <p>To request a correction or deletion of your registration details, or withdraw consent to event-related contact, email <a href="mailto:info@synergytechnofin.com">info@synergytechnofin.com</a>. Include the email address used for registration so the team can locate your record.</p>
+        </details>
       </div>
       <form class="register-form">
         <label class="registration-honeypot" aria-hidden="true">Website<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
@@ -490,6 +497,7 @@
         <label class="register-field"><span class="register-label-3">Package of interest</span><select name="package" class="register-select"></select></label>
         </div>
         <label class="register-field"><span class="register-label-3">Message</span><textarea name="message" maxlength="1000" rows="4" class="register-input"></textarea></label>
+        <p class="registration-privacy-link">Read how your details are used in our <a href="#privacy">registration privacy notice</a>.</p>
         <label class="register-label-4"><input type="checkbox" name="consent" required> I agree to be contacted about AgriXport India 2027.</label>
         <div class="register-content-3">
           <button type="submit" class="register-card">Register as delegate</button>
@@ -500,7 +508,7 @@
 
     <footer class="footer-grid">
       <div class="footer-content"><img src="assets/logo/logo-mark.png" alt="AgriXport India 2027" class="footer-image"><p class="footer-text">Building Global Trust: Safe Food, Global Reach. 26–27 February 2027. Convened by <a href="https://www.synergytechnofin.com" target="_blank" rel="noopener" class="footer-link">Synergy Technofin</a>.</p></div>
-      <div class="footer-content-2"><a href="#objectives">Focus areas</a><a href="#programme">Programme</a><a href="#who">Who attends</a><a href="#faq">FAQs</a></div>
+      <div class="footer-content-2"><a href="#objectives">Focus areas</a><a href="#programme">Programme</a><a href="#who">Who attends</a><a href="#faq">FAQs</a><a href="#privacy">Privacy</a></div>
       <div class="footer-content-3"><a href="#speakers">Speakers</a><a href="#sponsor">Sponsorship</a><a hidden href="#partners">Partners</a><a href="#organisers">Organisers</a><a href="#register">Register</a></div>
       <div class="footer-content-4">+91-11-41669393<br>info@synergytechnofin.com<br>© 2027</div>
     </footer>

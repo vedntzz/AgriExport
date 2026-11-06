@@ -428,3 +428,36 @@ it('links the FAQ from the footer and offers a contact for questions', () => {
   expect(document.querySelector('footer a[href="#faq"]')?.textContent).toBe('FAQs');
   expect(document.querySelector('#faq a[href="mailto:info@synergytechnofin.com"]')).not.toBeNull();
 });
+
+it('provides a persistent privacy notice outside the replaceable form', () => {
+  const document = pageDocument();
+  const notice = document.querySelector('#privacy');
+  expect(notice?.closest('form')).toBeNull();
+  expect(notice?.querySelector('summary')?.textContent).toBe('Registration privacy notice');
+  expect(document.querySelector('footer a[href="#privacy"]')?.textContent).toBe('Privacy');
+});
+
+it('explains registration data collection, purposes and service providers', () => {
+  const text = pageDocument().querySelector('#privacy')?.textContent || '';
+  expect(text).toContain('Synergy Technofin');
+  expect(text).toContain('name, designation, organisation, email address and mobile number');
+  expect(text).toContain('process registrations, send confirmations and event updates, and respond to sponsorship enquiries');
+
+});
+
+it('provides a contact for corrections, deletion requests and withdrawal of contact consent', () => {
+  const notice = pageDocument().querySelector('#privacy');
+  expect(notice?.textContent).toContain('request a correction or deletion of your registration details, or withdraw consent to event-related contact');
+  expect(notice?.querySelector('a')?.getAttribute('href')).toBe('mailto:info@synergytechnofin.com');
+});
+
+it('links privacy immediately before the existing required consent checkbox', () => {
+  const document = pageDocument();
+  const label = document.querySelector('input[name="consent"]').closest('label');
+  expect(label.previousElementSibling?.querySelector('a')?.getAttribute('href')).toBe('#privacy');
+  expect(document.querySelector('link[href="css/form.css?v=41"]')).not.toBeNull();
+});
+
+it.each(['Vercel', 'Supabase', 'Google Gmail or Resend'])('identifies %s in the privacy notice', provider => {
+  expect(pageDocument().querySelector('#privacy')?.textContent).toContain(provider);
+});
