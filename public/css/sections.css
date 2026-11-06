@@ -160,3 +160,8 @@
 [data-site] .organisers-text { margin: 0; font-size: 15px; line-height: 1.6; color: #45454A; }
 [data-site] .organisers-content-2 { border-top: 1px solid #D2D2CE; padding-top: 14px; }
 [data-site] .organisers-text-2 { margin: 0; font-size: 15px; line-height: 1.6; color: #45454A; overflow-wrap: anywhere; }
+
+[data-site] .about-copy { grid-column: 5 / span 8; display: grid; gap: 18px; }
+[data-site] .about-copy .organisers-text { font-size: 16px; }
+[data-site] .register-contact-link { color: #FFFFFF; text-decoration: underline; text-underline-offset: 3px; overflow-wrap: anywhere; }
+[data-site] .register-contact-link:hover { color: #C6E5DB; }

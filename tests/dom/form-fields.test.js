@@ -38,9 +38,9 @@ it('renders four Package options from config', () => {
   expect(optionValues('package')).toHaveLength(4);
 });
 
-it.each([['Platinum', '25.00'], ['Diamond', '20.00'], ['Gold', '15.00'], ['Silver', '10.00']])('shows the %s package price', (name, price) => {
+it.each([['Platinum', '20.00'], ['Diamond', '15.00'], ['Gold', '10.00'], ['Silver', '5.00']])('shows the %s package price', (name, price) => {
   const option = document.querySelector(`select[name="package"] option[value="${name}"]`);
-  expect(option?.textContent).toBe(`${name} — Rs. ${price} Lacs`);
+  expect(option?.textContent).toBe(`${name} — Rs. ${price} Lakhs`);
 });
 
 it.each([

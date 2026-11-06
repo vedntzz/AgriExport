@@ -273,3 +273,71 @@ it('hides navigation links to the temporarily hidden partners block', () => {
   expect(links.length).toBeGreaterThan(0);
   expect(links.every(link => link.hidden)).toBe(true);
 });
+
+const brochureTiers = [['Platinum', '20.00'], ['Diamond', '15.00'], ['Gold', '10.00'], ['Silver', '5.00']];
+const brochureCommonBenefits = [
+  'Prominent branding across all event marketing & communication collaterals',
+  'Special acknowledgment during Inaugural and Valedictory Ceremonies',
+  'Logo placement on Main Stage Backdrop',
+  'Branding on event website, delegate kits, lanyards & registration counter',
+  'Logo inclusion in all sponsor creatives and official press releases',
+  'Logo on knowledge paper', 'Complimentary delegate passes',
+];
+const brochureKeynote = 'Keynote address during Inaugural or Valedictory Session';
+const brochurePanel = 'Participation in one high-level panel discussion';
+const brochureModerator = 'Moderator role for one panel discussion';
+const brochureCover = 'Back cover page of the official Event Souvenir';
+
+function brochureCard(name) {
+  return [...pageDocument().querySelectorAll('#sponsor .sponsor-grid-2 > div')].find(card => card.firstElementChild.textContent === name);
+}
+
+function brochureBenefits(name) {
+  const stage = name === 'Silver' ? [] : [brochurePanel, brochureModerator];
+  const premium = ['Platinum', 'Diamond'].includes(name) ? [brochureKeynote, ...stage, brochureCover] : stage;
+  return [`Official designation as ${name} Sponsor`, ...brochureCommonBenefits.slice(0, 2), ...premium, ...brochureCommonBenefits.slice(2)];
+}
+
+it.each(brochureTiers)('matches the brochure %s price and benefits', (name, price) => {
+  const card = brochureCard(name);
+  expect(card.querySelector('.sponsor-content-3').textContent).toBe(`Rs. ${price} Lakhs`);
+  expect([...card.querySelectorAll('li')].map(item => item.textContent)).toEqual(brochureBenefits(name));
+});
+
+it('keeps the hidden partner prices consistent with the brochure', () => {
+  const prices = [...pageDocument().querySelectorAll('#partners .partners-content-2')].map(element => element.textContent);
+  expect(prices).toEqual(brochureTiers.map(([, price]) => `Rs. ${price} Lakhs`));
+});
+
+it('includes the full brochure overview and Synergy 5F concept', () => {
+  const document = pageDocument();
+  expect(document.querySelector('#about').textContent).toContain('As global markets place increasing emphasis on food safety, quality assurance, traceability and sustainability');
+  expect(document.querySelector('#about').textContent).toContain('The event will facilitate dialogue, knowledge exchange and collaboration');
+  expect(document.querySelector('#organisers').textContent).toContain('technical agribusiness advisories');
+  expect(document.querySelector('#organisers').textContent).toContain('5F Concept—Farmers, Farms, Farming, Farm Business, and Farm Tech');
+});
+
+it.each([['Ms. Vandana Khurana', 'khurana.v@synergytechnofin.com'], ['Mr. Abhishek Kumar', 'abhishek.k@synergytechnofin.com']])('provides the brochure contact %s', (name, email) => {
+  const section = pageDocument().querySelector('#register');
+  expect(section.textContent).toContain(name);
+  expect(section.querySelector(`a[href="mailto:${email}"]`)?.textContent).toBe(email);
+});
+
+it('shows the event website from the brochure without replacing the working registration form', () => {
+  const section = pageDocument().querySelector('#register');
+  expect(section.querySelector('a[href="https://www.agrixportindia.com"]')?.textContent).toBe('www.agrixportindia.com');
+  expect(section.querySelector('form')).not.toBeNull();
+  expect(section.textContent).not.toContain('registration opens ahead');
+});
+
+it('uses the brochure inaugural description and GlobalG.A.P. spelling', () => {
+  const programme = pageDocument().querySelector('#programme');
+  expect(programme.textContent).toContain("Exploring India's export vision");
+  expect(programme.textContent).toContain('GlobalG.A.P. Certification systems');
+});
+
+it('does not promise stage or souvenir benefits to every sponsor tier', () => {
+  const introduction = pageDocument().querySelector('#sponsor .objectives-text').textContent;
+  expect(introduction).not.toContain('each carrying stage presence');
+  expect(introduction).toContain('complimentary delegate passes');
+});
