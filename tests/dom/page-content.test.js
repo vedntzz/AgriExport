@@ -32,7 +32,7 @@ it('contains no sc-camel attributes', () => {
 });
 
 it.each(['base', 'layout', 'sections', 'form'])('links the %s stylesheet', (name) => {
-  const link = pageDocument().querySelector(`link[rel="stylesheet"][href="css/${name}.css"]`);
+  const link = pageDocument().querySelector(`link[rel="stylesheet"][href^="css/${name}.css"]`);
   expect(link).not.toBeNull();
   expect(readFileSync(new URL(`../../public/css/${name}.css`, import.meta.url), 'utf8')).not.toBe('');
 });
@@ -340,4 +340,17 @@ it('does not promise stage or souvenir benefits to every sponsor tier', () => {
   const introduction = pageDocument().querySelector('#sponsor .objectives-text').textContent;
   expect(introduction).not.toContain('each carrying stage presence');
   expect(introduction).toContain('complimentary delegate passes');
+});
+
+it('refreshes the About stylesheet so cached layouts cannot collapse its copy', () => {
+  const link = pageDocument().querySelector('link[href^="css/sections.css"]');
+  expect(link.getAttribute('href')).toBe('css/sections.css?v=36');
+});
+
+it('gives the About copy eight desktop grid columns', () => {
+  const document = pageDocument();
+  const style = document.createElement('style');
+  style.textContent = readFileSync(new URL('../../public/css/sections.css', import.meta.url), 'utf8');
+  document.head.append(style);
+  expect(document.defaultView.getComputedStyle(document.querySelector('.about-copy')).gridColumn).toBe('5 / span 8');
 });
