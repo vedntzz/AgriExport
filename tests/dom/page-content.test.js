@@ -344,7 +344,7 @@ it('does not promise stage or souvenir benefits to every sponsor tier', () => {
 
 it('refreshes the About stylesheet so cached layouts cannot collapse its copy', () => {
   const link = pageDocument().querySelector('link[href^="css/sections.css"]');
-  expect(link.getAttribute('href')).toBe('css/sections.css?v=39');
+  expect(link.getAttribute('href')).toBe('css/sections.css?v=40');
 });
 
 it('gives the About copy eight desktop grid columns', () => {
@@ -392,4 +392,39 @@ it('refreshes the mobile navigation stylesheet after changing its layout', () =>
 
 it.each([320, 390, 768])('keeps the Sponsorship navigation link available at %ipx', width => {
   expect(mobileProperty('header nav a[href="#sponsor"]', width, 'display')).not.toBe('none');
+});
+
+it('identifies the event and its date before the hero slogan', () => {
+  const hero = pageDocument().querySelector('.hero-content');
+  expect(hero.querySelector('.hero-event-name')?.textContent).toBe('AgriXport India 2027');
+  expect(hero.querySelector('.hero-event-details')?.textContent).toBe('26–27 February 2027 · Pune, Maharashtra, India');
+  expect(hero.querySelector('.hero-event-name').compareDocumentPosition(hero.querySelector('h1')) & 4).toBe(4);
+});
+
+it('provides a real downloadable brochure with an explicit PDF label', () => {
+  const link = pageDocument().querySelector('.hero-content a[download]');
+  expect(link?.getAttribute('href')).toBe('assets/agrixport-india-2027-brochure.pdf');
+  expect(link?.textContent).toMatch(/Download brochure.*PDF/);
+  expect(readFileSync(new URL('../../public/assets/agrixport-india-2027-brochure.pdf', import.meta.url)).subarray(0, 5).toString()).toBe('%PDF-');
+});
+
+it('explains the delegate confirmation and sponsorship follow-up beside the form', () => {
+  const guidance = pageDocument().querySelector('#register .registration-guidance');
+  expect(guidance?.textContent).toContain('Delegates receive a registration confirmation by email.');
+  expect(guidance?.textContent).toContain('Sponsorship enquiries go to the organising team for follow-up.');
+  expect(guidance?.querySelector('a')?.getAttribute('href')).toBe('#faq');
+});
+
+it('answers common visitor questions with native expandable FAQ items', () => {
+  const faq = pageDocument().querySelector('#faq');
+  expect(faq?.querySelectorAll('details')).toHaveLength(5);
+  expect(faq?.querySelectorAll('details > summary')).toHaveLength(5);
+  expect(faq?.textContent).toContain('26–27 February 2027');
+  expect(faq?.textContent).toContain('For delegate fees and attendance arrangements, contact the organising team');
+});
+
+it('links the FAQ from the footer and offers a contact for questions', () => {
+  const document = pageDocument();
+  expect(document.querySelector('footer a[href="#faq"]')?.textContent).toBe('FAQs');
+  expect(document.querySelector('#faq a[href="mailto:info@synergytechnofin.com"]')).not.toBeNull();
 });
