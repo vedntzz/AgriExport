@@ -116,17 +116,9 @@ Use dummy data until the production password and final launch checks are complet
 
 ## Download registrations as CSV
 
-Use GET with the URL-encoded ADMIN_EXPORT_TOKEN value. These examples contain placeholders only:
-
-```text
-https://YOUR-DOMAIN/api/export-csv?token=YOUR_URL_ENCODED_TOKEN
-https://YOUR-DOMAIN/api/export-csv?token=YOUR_URL_ENCODED_TOKEN&audience=Delegate
-https://YOUR-DOMAIN/api/export-csv?token=YOUR_URL_ENCODED_TOKEN&audience=Sponsor
-```
-
-Omit audience to export all registrations; other audience values return 400.
-Missing or incorrect tokens return 401. Non-GET requests return 405.
-Keep token-bearing URLs private because URLs can be recorded in browser history and logs.
+Sign in at /admin.html, choose All registrations, Delegate or Sponsor, and select Download CSV.
+The download uses the same browser authentication as the registration desk.
+The old /api/export-csv endpoint returns 410 Gone. Use the registration desk for CSV downloads.
 The attachment is named registrations-YYYY-MM-DD.csv using the UTC download date, with newest registrations first.
 Columns are created_at, audience, prefix, full_name, designation, mobile, email, organisation, category, package, message.
 Timestamps in cells use IST (YYYY-MM-DD HH:mm). The CSV includes a UTF-8 BOM, quoted cells and formula protection.
