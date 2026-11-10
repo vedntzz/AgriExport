@@ -24,9 +24,9 @@ it('uses RESEND_API_KEY from the environment', async () => {
   expect(Resend).toHaveBeenCalledWith('test-resend-key');
 });
 
-it('sends the recipient and content with the configured sender and reply-to', async () => {
+it('uses the configured Resend sender and routes replies to Vandana', async () => {
   await sendEmail(email);
-  expect(send).toHaveBeenCalledWith({ ...email, from: 'AgriXport <events@example.test>', replyTo: 'info@synergytechnofin.com' });
+  expect(send).toHaveBeenCalledWith({ ...email, from: 'AgriXport <events@example.test>', replyTo: 'khurana.v@synergytechnofin.com' });
   expect(send).toHaveBeenCalledTimes(1);
 });
 
