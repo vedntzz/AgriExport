@@ -125,16 +125,16 @@ Timestamps in cells use IST (YYYY-MM-DD HH:mm). The CSV includes a UTF-8 BOM, qu
 
 ## Regenerate the registration QR
 
-Replace YOUR-DOMAIN with the final HTTPS domain:
+Generate the QR for the production registration page:
 
 ```sh
-SITE_URL="https://YOUR-DOMAIN" npm run qr
+SITE_URL="https://www.agrixportindia.com" npm run qr
 ```
 
-This encodes https://YOUR-DOMAIN/register and writes public/assets/qr/register.svg and register.png.
+This encodes https://www.agrixportindia.com/register and writes public/assets/qr/register.svg and register.png.
 Options: 1024px, margin 4, error correction H, dark #BC0A08 and light #FFFFFF.
 Include both generated files in source control and redeploy before distributing them.
-Regenerate whenever the canonical domain changes. Final production assets still need the actual domain.
+Regenerate both files whenever the canonical domain changes.
 
 ## Manual launch checklist
 
@@ -150,14 +150,13 @@ Regenerate whenever the canonical domain changes. Final production assets still 
 
 ## Search and sharing
 
-The current canonical homepage is https://agriexport-six.vercel.app/.
+The canonical homepage is https://www.agrixportindia.com/.
 Search descriptions, Open Graph/Twitter previews and Event JSON-LD are in public/index.html.
 The sharing image uses the existing event logo; individual platforms may crop or cache it.
 public/sitemap.xml lists the homepage; public/robots.txt excludes API routes from crawling.
 The admin page has noindex metadata; API authentication, rather than robots.txt, protects registration data.
-When the purchased domain works over HTTPS, update the canonical, og:url, image URLs and Event URL in public/index.html,
-plus the sitemap URL in public/robots.txt and the homepage URL in public/sitemap.xml.
-Update SITE_URL in Vercel and regenerate the QR separately; it does not rewrite these static files.
+Public paths on agriexport-six.vercel.app redirect to the same paths on the production domain.
+Set SITE_URL in Vercel to https://www.agrixportindia.com for email links. It does not rewrite the static metadata.
 Add the confirmed venue name and street address to the visible page and JSON-LD when available.
 Dates are date-only until session times are confirmed; no unconfirmed prices or speakers are included in the markup.
 Validate the event using https://search.google.com/test/rich-results and resolve venue-related issues before promotion.

@@ -462,7 +462,7 @@ it.each(['Vercel', 'Supabase', 'Google Gmail or Resend'])('identifies %s in the 
   expect(pageDocument().querySelector('#privacy')?.textContent).toContain(provider);
 });
 
-const canonicalSite = 'https://agriexport-six.vercel.app/';
+const canonicalSite = 'https://www.agrixportindia.com/';
 const searchDescription = 'Join AgriXport India 2027 in Pune on 26–27 February 2027. Explore agricultural exports, food safety, traceability and global trade. Register or enquire about sponsorship.';
 
 it('describes the event, date and location in search metadata', () => {

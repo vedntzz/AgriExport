@@ -44,12 +44,20 @@ it('publishes crawler rules with the working sitemap and excludes API routes', (
   const robots = readProjectFile('public/robots.txt');
   expect(robots).toContain('User-agent: *');
   expect(robots).toContain('Disallow: /api/');
-  expect(robots).toContain('Sitemap: https://agriexport-six.vercel.app/sitemap.xml');
+  expect(robots).toContain('Sitemap: https://www.agrixportindia.com/sitemap.xml');
 });
 
 it('lists only the canonical homepage in the sitemap', () => {
   const sitemap = readProjectFile('public/sitemap.xml');
   expect(sitemap).toContain('xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"');
-  expect([...sitemap.matchAll(/<loc>(.*?)<\/loc>/g)].map(match => match[1])).toEqual(['https://agriexport-six.vercel.app/']);
+  expect([...sitemap.matchAll(/<loc>(.*?)<\/loc>/g)].map(match => match[1])).toEqual(['https://www.agrixportindia.com/']);
   expect(sitemap).not.toMatch(/admin|api|#register/);
+});
+
+it('moves the old public URLs to the matching paths on the production domain', () => {
+  const { redirects } = JSON.parse(readProjectFile('vercel.json'));
+  expect(redirects[0]).toEqual({
+    source: '/:path((?!api/).*)', destination: 'https://www.agrixportindia.com/:path',
+    has: [{ type: 'host', value: 'agriexport-six.vercel.app' }], permanent: true,
+  });
 });

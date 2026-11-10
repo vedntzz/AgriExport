@@ -5,6 +5,17 @@
   "outputDirectory": "public",
   "redirects": [
     {
+      "source": "/:path((?!api/).*)",
+      "destination": "https://www.agrixportindia.com/:path",
+      "has": [
+        {
+          "type": "host",
+          "value": "agriexport-six.vercel.app"
+        }
+      ],
+      "permanent": true
+    },
+    {
       "source": "/register",
       "destination": "/#register",
       "permanent": false

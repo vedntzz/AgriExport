@@ -1,4 +1,4 @@
 User-agent: *
 Disallow: /api/
 
-Sitemap: https://agriexport-six.vercel.app/sitemap.xml
+Sitemap: https://www.agrixportindia.com/sitemap.xml
